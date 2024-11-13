@@ -50,7 +50,7 @@ jobs:
 
       # Deploy to Azure Synapse
       - name: Deploy to Azure Synapse
-      - uses: azure/synapse-workspace-deployment@V1.7.0
+        uses: Azure/synapse-workspace-deployment@v1.7.0
         with:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resource-group: TCCC-rg
