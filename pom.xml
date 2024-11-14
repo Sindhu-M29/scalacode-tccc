@@ -69,6 +69,12 @@
             </execution>
         </executions>
       </plugin>
+    <repositories>
+  <repository>
+    <id>sonatype</id>
+    <url>https://oss.sonatype.org/content/repositories/releases</url>
+  </repository>
+</repositories>
 
       <!-- Optional: Add scoverage plugin for coverage -->
       <plugin>
