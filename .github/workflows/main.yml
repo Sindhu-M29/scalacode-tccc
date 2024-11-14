@@ -22,7 +22,7 @@ jobs:
       - name: Unzip Scala Project
         run: |
          mkdir extracted-scala
-         unzip ./scala-project.zip -d extracted-scala
+         unzip ./scala.zip -d extracted-scala
       # Cache Maven dependencies
       - name: Cache Maven dependencies
         uses: actions/cache@v3
