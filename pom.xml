@@ -1,5 +1,8 @@
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>com.example</groupId>
   <artifactId>MyScalaProject</artifactId>
   <version>1.0-SNAPSHOT</version>
@@ -27,8 +30,10 @@
   </dependencies>
 
   <build>
-    <sourceDirectory>src/main/scala</sourceDirectory>
-    <testSourceDirectory>src/test/scala</testSourceDirectory>
+    <!-- Modify source directory to point to the extracted folder (change as needed) -->
+    <sourceDirectory>${project.basedir}/extracted-scala</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/extracted-tests</testSourceDirectory> <!-- Modify if needed -->
+
     <plugins>
       <plugin>
         <groupId>net.alchim31.maven</groupId>
@@ -43,26 +48,42 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- Jacoco plugin for code coverage -->
       <plugin>
-    <groupId>org.jacoco</groupId>
-    <artifactId>jacoco-maven-plugin</artifactId>
-    <version>0.8.8</version> <!-- Or your preferred Jacoco version -->
-    <executions>
-        <execution>
-            <goals>
-                <goal>prepare-agent</goal>
-            </goals>
-        </execution>
-        <execution>
-            <id>report</id>
-            <phase>test</phase>
-            <goals>
-                <goal>report</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
-       <!-- Add scoverage plugin for coverage if needed -->
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.8</version> <!-- Or your preferred Jacoco version -->
+        <executions>
+            <execution>
+                <goals>
+                    <goal>prepare-agent</goal>
+                </goals>
+            </execution>
+            <execution>
+                <id>report</id>
+                <phase>test</phase>
+                <goals>
+                    <goal>report</goal>
+                </goals>
+            </execution>
+        </executions>
+      </plugin>
+
+      <!-- Optional: Add scoverage plugin for coverage -->
+      <plugin>
+        <groupId>org.scoverage</groupId>
+        <artifactId>scoverage-maven-plugin</artifactId>
+        <version>1.6.1</version> <!-- or the version you prefer -->
+        <executions>
+            <execution>
+                <goals>
+                    <goal>cover</goal>
+                </goals>
+            </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 </project>
