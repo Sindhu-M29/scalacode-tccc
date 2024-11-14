@@ -1,0 +1,58 @@
+name: Azure Storage Account Deployment (Scala with Maven)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v3
+
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Cache Maven dependencies
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      # Build with Maven
+      - name: Build with Maven
+        run: mvn clean package
+
+      # Run tests with coverage (ScalaTest example)
+      - name: Run tests with coverage
+        run: mvn scoverage:report
+
+      # Upload coverage to Codecov (optional)
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      # Azure login
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Upload to Azure Storage Account
+      - name: Upload to Azure Storage
+        uses: azure/storage-blob-upload-action@v1
+        with:
+          connection-string: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          container: xmscaled-files  # replace with your actual container name
+          source: target/*.jar  # path to the artifact to upload
+          destination-path: https://sitecorescaled.blob.core.windows.net/xmscaled-files/  # optional: specify the path inside the container
