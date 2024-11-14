@@ -10,8 +10,8 @@
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <scala.version>2.13.10</scala.version>  <!-- Or your Scala version -->
-    <scalatest.version>3.2.14</scalatest.version> <!-- Or your ScalaTest version -->
+    <scala.version>2.13.10</scala.version>
+    <scalatest.version>3.2.14</scalatest.version>
   </properties>
 
   <dependencies>
@@ -23,22 +23,23 @@
 
     <dependency>
       <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_2.13</artifactId> <!-- Match Scala version -->
+      <artifactId>scalatest_2.13</artifactId>
       <version>${scalatest.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
-    <!-- Modify source directory to point to the extracted folder (change as needed) -->
+    <!-- Modify source directories if needed -->
     <sourceDirectory>${project.basedir}/extracted-scala</sourceDirectory>
-    <testSourceDirectory>${project.basedir}/extracted-tests</testSourceDirectory> <!-- Modify if needed -->
+    <testSourceDirectory>${project.basedir}/extracted-tests</testSourceDirectory>
 
     <plugins>
+      <!-- Scala Maven Plugin -->
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>4.7.1</version>  <!-- Or a compatible version -->
+        <version>4.7.1</version>
         <executions>
           <execution>
             <goals>
@@ -49,47 +50,47 @@
         </executions>
       </plugin>
 
-      <!-- Jacoco plugin for code coverage -->
+      <!-- JaCoCo Plugin for code coverage -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.8</version> <!-- Or your preferred Jacoco version -->
+        <version>0.8.8</version>
         <executions>
-            <execution>
-                <goals>
-                    <goal>prepare-agent</goal>
-                </goals>
-            </execution>
-            <execution>
-                <id>report</id>
-                <phase>test</phase>
-                <goals>
-                    <goal>report</goal>
-                </goals>
-            </execution>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
         </executions>
       </plugin>
-    <repositories>
-  <repository>
-    <id>sonatype</id>
-    <url>https://oss.sonatype.org/content/repositories/releases</url>
-  </repository>
-</repositories>
 
-      <!-- Optional: Add scoverage plugin for coverage -->
+      <!-- Scoverage Plugin for code coverage -->
       <plugin>
         <groupId>org.scoverage</groupId>
         <artifactId>scoverage-maven-plugin</artifactId>
-        <version>3.0.0</version> <!-- or the version you prefer -->
+        <version>3.0.0</version>
         <executions>
-            <execution>
-                <goals>
-                    <goal>cover</goal>
-                </goals>
-            </execution>
+          <execution>
+            <goals>
+              <goal>cover</goal>
+            </goals>
+          </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
+
+  <repositories>
+    <repository>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+  </repositories>
 </project>
