@@ -1,4 +1,4 @@
-name: Azure Synapse Deployment (Scala with Maven)
+name: Azure Storage Account Deployment (Scala with Maven)
 
 on:
   push:
@@ -48,11 +48,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Deploy to Azure Synapse
-      - name: Deploy to Azure Synapse
-        uses: Synapse workspace deployment@v2
+      # Upload to Azure Storage Account
+      - name: Upload to Azure Storage
+        uses: azure/storage-blob-upload-action@v1
         with:
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resource-group: TCCC-rg
-          workspace-name: coke-ws
-          artifact-path: target/*.jar
+          connection-string: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          container: xmscaled-files  # replace with your actual container name
+          source: target/*.jar  # path to the artifact to upload
+          destination-path: https://sitecorescaled.blob.core.windows.net/xmscaled-files/  # optional: specify the path inside the container
