@@ -50,9 +50,12 @@ jobs:
 
       # Upload to Azure Storage Account
       - name: Upload to Azure Storage
-        uses: azure/storage-blob-upload-action@v1
+        uses: azure/CLI@v1
         with:
-          connection-string: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-          container: xmscaled-files  # replace with your actual container name
-          source: target/*.jar  # path to the artifact to upload
-          destination-path: https://sitecorescaled.blob.core.windows.net/xmscaled-files/  # optional: specify the path inside the container
+          inlineScript: |
+            az storage blob upload-batch \
+              --account-name sitecorescaled \
+              --auth-mode key \
+              -d xmscaled-files \
+              -s target/
+      
