@@ -1,4 +1,4 @@
-name: Azure Storage Account Deployment (Scala with Maven)
+name: Scala Maven Build and Deploy to Azure
 
 on:
   push:
@@ -6,67 +6,34 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      # Set up JDK 17
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'temurin'
 
-      # Unzip Scala project if necessary
-      - name: Unzip Scala Project
-        run: |
-          mkdir extracted-scala
-          unzip ./scala.zip -d extracted-scala
-
-      # Cache Maven dependencies to speed up build
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
+      - name: Set up Maven
+        uses: actions/setup-java@v2
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          java-version: '17'
+          mvn-version: '3.8.1'
 
-      # Run Maven clean install with debug information
-      - name: Build with Maven (Clean Install with Debug)
-        run: mvn clean install -X
+      - name: Build and Package with Maven
+        run: mvn clean package
 
-      # Purge local repository if needed
-      - name: Purge Local Repository
-        run: mvn dependency:purge-local-repository
+      - name: Run Unit Tests and Code Coverage
+        run: mvn test
 
-      # Run tests and generate code coverage reports
-      - name: Run tests with coverage
-        run: mvn test jacoco:report scoverage:report
-
-      # Upload coverage report to Codecov (optional)
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Upload JAR to Azure Storage
+        uses: azure/storage-blob-upload-action@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      # Log in to Azure
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      # Upload files to Azure Storage Account
-      - name: Upload to Azure Storage
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az storage blob upload-batch \
-              --account-name sitecorescaled \
-              --auth-mode key \
-              -d xmscaled-files \
-              -s target/
+          connection-string: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          container-name: xmscaled-files'
+          source: 'target/artifact.jar'
+          destination: 'xmscaled-files/artifact.jar'
